@@ -10,24 +10,36 @@
 </head>
 
 <body>
+  <h2>TOTP security by obscurity</h2>
   <l>passwd:</l><input id="pw" oninput="changeKey(this.value)">
   <br>
-  <l>raw:</l><totp key="JBSWY3DPEHPK3PXP" kind="raw"></totp><br>
-  <l>with passwd:</l><br>
+  <l>example (raw):</l><totp key="JBSWY3DPEHPK3PXP" kind="raw"></totp><br>
+  <l>^ with passwd:</l><br>
   <l><c>pixel</c>:</l><totp key="X5QZS2CTYYSRE3S2"></totp><br>
   <l><c>SHA1</c>:</l><totp key="ZH7LVCMUWZFUOS6S"></totp><br>
   <l><c>XOR FTW</c>:</l><totp key="YOACSLZAARDSMCSV"></totp><br>
   <l><c>FLAA</c>:</l><totp key="IPRZYVZLTZJFFIEY"></totp>
   <br><br>
   <details>
+    <summary>how does this work?</summary>
+    <sm>to encode/decode a TOTP key:
+    <ol>
+      <li>i hash the password with SHA1</li>
+      <li>i XOR the bits of the encoded (or decoded - XOR works both ways) key with the hash; the hash is twice as long as the TOTP key so i decided to use both halves of the hash on the TOTP key</li>
+      <li>use the XOR'd key as the new TOTP key</li>
+    </ol>
+    in <i>theory</i> this is secure because there's no way to tell if a TOTP key is correct other than to try it against github, which ratelimits a ton. also, assuming the password to the TOTP key isn't super vulnerable to a dictionary attack (trust me, it isn't), guessing passwords is no better than guessing 6-digit codes at random.
+    </sm>
+  <details>
     <summary>the (possibly impossible) challenge</summary>
-    <sm>now here's one i won't give the answer for<br>
-    this github account, user <c>g8fymjgj</c>, pass <c>JGJmyf8g</c><br>
+    <sm>this github account, user <c>g8fymjgj</c>, pass <c>JGJmyf8g</c><br>
     all you need is the totp code<br>
     (fyi: i have no idea if it's possible)<br>
-    if you succeed, edit this box to say so</sm>
-    <!-- here! -->
+    if you succeed, edit below to say so<br>
+    i do ask that you actually try to crack the TOTP code from here; guessing every 6-digit code <i>might</i> work but isn't very clever</sm>
+    <!-- edit below here! also maybe include something about the real TOTP key to prove you didn't just brute force it -->
     <l>totp:</l><totp key="UXAEJPJ6CITDRCEW"></totp>
+  </details>
   </details>
 
   <style>
@@ -49,7 +61,7 @@
       font-family: monospace;
     }
     l {
-      width: 140px;
+      width: 160px;
       text-align: right;
       padding-right: 10px;
       display: inline-block;
